@@ -9,7 +9,7 @@ var ast = parser.parseDOM(html, {
 
 // console.log('ast:', ast);
 
-// console.log(ast[0]);
+console.log(ast[0]);
 ast[0].children.forEach(item => {
     console.log(item);
 });
@@ -22,7 +22,7 @@ ast[0].children.forEach(item => {
 function printAttrs(ast) {
     if(ast.attrs && ast.attrs.length) {
         ast.attrs.forEach(attr => {
-            console.log('attr:', attr);
+            // console.log('attr:', attr);
         });
     }
 

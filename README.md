@@ -21,13 +21,13 @@ parse with React.js: https://github.com/abell123456/htmlparser3/tree/master/demo
 ```js
 const html = `
 <Switch condition={"5"}>
-    我可以默认显示的油
+    <div>555</div>
     <Case is={a>b} />
-        当condition等于1时渲染
+        <span>111</span>
     <Case is="2" />
-        当condition等于2时渲染
+        <span>222</span>
     <Default/>
-        当condition不等1也不等于2时渲染
+        <span>I am showed now!</span>
 </Switch>
 `;
 
@@ -39,7 +39,7 @@ var ast = parser.parseDOM(html, {
 });
 
 
-// console.log('ast:', ast);
+console.log('ast[0]:', ast[0]); // AST
 
 ast[0].children.forEach(item => {
     console.log(item);
