@@ -1,5 +1,5 @@
 var Parser = require("./Parser.js"),
-    DomHandler = require("domhandler3");
+    DomHandler = require("domhandler2");
 
 function defineProp(name, value){
 	delete module.exports[name];

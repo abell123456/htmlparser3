@@ -211,7 +211,8 @@ Parser.prototype = {
         }
 
         if (this._cbs.onopentag) {
-            this._attribs = [];
+            // this._attribs = [];
+            this._attribs = {};
         }
     },
 
@@ -311,7 +312,8 @@ Parser.prototype = {
                 attrObj.expression = this._attribvalue;
             }
 
-            var sameNameItems = getItemsFromAry(this._attribname, this._attribs);
+            // var sameNameItems = getItemsFromAry(this._attribname, this._attribs);
+            var sameNameItems = this._attribs[this._attribname] || '';
 
             if (sameNameItems.length) {
                 // 相同属性后面的会覆盖前面的
@@ -321,7 +323,8 @@ Parser.prototype = {
                     sameNameItems[key] = attrObj[key];
                 });
             } else {
-                this._attribs.push(attrObj);
+                // this._attribs.push(attrObj);
+                Object.assign(this._attribs, attrObj);
             }
         }
 
