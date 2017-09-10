@@ -324,7 +324,7 @@ Parser.prototype = {
                 });
             } else {
                 // this._attribs.push(attrObj);
-                Object.assign(this._attribs, attrObj);
+                this._attribs[this._attribname] = this._attribvalue;
             }
         }
 
