@@ -139,12 +139,12 @@ function Parser(cbs, options) {
     this.startIndex = 0;
     this.endIndex = null;
 
-    this._lowerCaseTagNames = "lowerCaseTags" in this._options ?
-        !!this._options.lowerCaseTags :
-        !this._options.xmlMode;
-    this._lowerCaseAttributeNames = "lowerCaseAttributeNames" in this._options ?
-        !!this._options.lowerCaseAttributeNames :
-        !this._options.xmlMode;
+    this._lowerCaseTagNames = "lowerCaseTags" in this._options
+        ? !!this._options.lowerCaseTags
+        : !this._options.xmlMode;
+    this._lowerCaseAttributeNames = "lowerCaseAttributeNames" in this._options
+        ? !!this._options.lowerCaseAttributeNames
+        : !this._options.xmlMode;
 
     let TokenizerClass = Tokenizer;
 
@@ -155,7 +155,9 @@ function Parser(cbs, options) {
     this._tokenizer = new TokenizerClass(this._options, this);
 
     if (this._cbs.onparserinit) {
-        this._cbs.onparserinit(this);
+        this
+            ._cbs
+            .onparserinit(this);
     }
 }
 
@@ -175,7 +177,9 @@ Parser.prototype = {
             this.startIndex = this.endIndex + 1;
         }
 
-        this.endIndex = this._tokenizer.getAbsoluteIndex();
+        this.endIndex = this
+            ._tokenizer
+            .getAbsoluteIndex();
     },
 
     //Tokenizer event handlers
@@ -184,7 +188,9 @@ Parser.prototype = {
         this.endIndex--;
 
         if (this._cbs.ontext) {
-            this._cbs.ontext(data);
+            this
+                ._cbs
+                .ontext(data);
         }
     },
 
@@ -196,18 +202,19 @@ Parser.prototype = {
         this._tagname = name;
 
         if (!this._options.xmlMode && name in openImpliesClose) {
-            for (
-                var el;
-                (el = this._stack[this._stack.length - 1]) in openImpliesClose[name]; this.onclosetag(el)
-            );
-        }
+            for (var el; (el = this._stack[this._stack.length - 1]) in openImpliesClose[name]; this.onclosetag(el)) ;
+            }
 
         if (this._options.xmlMode || !(name in voidElements)) {
-            this._stack.push(name);
+            this
+                ._stack
+                .push(name);
         }
 
         if (this._cbs.onopentagname) {
-            this._cbs.onopentagname(name);
+            this
+                ._cbs
+                .onopentagname(name);
         }
 
         if (this._cbs.onopentag) {
@@ -221,14 +228,18 @@ Parser.prototype = {
 
         if (this._attribs) {
             if (this._cbs.onopentag) {
-                this._cbs.onopentag(this._tagname, this._attribs);
+                this
+                    ._cbs
+                    .onopentag(this._tagname, this._attribs);
             }
 
             this._attribs = null;
         }
 
         if (!this._options.xmlMode && this._cbs.onclosetag && this._tagname in voidElements) {
-            this._cbs.onclosetag(this._tagname);
+            this
+                ._cbs
+                .onclosetag(this._tagname);
         }
 
         this._tagname = "";
@@ -242,13 +253,19 @@ Parser.prototype = {
         }
 
         if (this._stack.length && (!(name in voidElements) || this._options.xmlMode)) {
-            var pos = this._stack.lastIndexOf(name);
+            var pos = this
+                ._stack
+                .lastIndexOf(name);
             if (pos !== -1) {
                 if (this._cbs.onclosetag) {
                     pos = this._stack.length - pos;
-                    while (pos--) this._cbs.onclosetag(this._stack.pop());
-                } else this._stack.length = pos;
-            } else if (name === "p" && !this._options.xmlMode) {
+                    while (pos--)
+                        this._cbs.onclosetag(this._stack.pop());
+                    }
+                else
+                    this._stack.length = pos;
+                }
+            else if (name === "p" && !this._options.xmlMode) {
                 this.onopentagname(name);
                 this._closeCurrentTag();
             }
@@ -271,18 +288,21 @@ Parser.prototype = {
 
         this.onopentagend();
 
-        //self-closing tags will be on the top of the stack
-        //(cheaper check than in onclosetag)
+        // self-closing tags will be on the top of the stack (cheaper check than in
+        // onclosetag)
         if (this._stack[this._stack.length - 1] === name) {
             if (this._cbs.onclosetag) {
-                this._cbs.onclosetag(name);
+                this
+                    ._cbs
+                    .onclosetag(name);
             }
-            this._stack.pop();
+            this
+                ._stack
+                .pop();
         }
     },
 
-    // ******* attribute处理 start ******
-    // 赋值：属性名字
+    // ******* attribute处理 start ****** 赋值：属性名字
     onattribname(name) {
         if (this._lowerCaseAttributeNames) {
             name = name.toLowerCase();
@@ -298,34 +318,13 @@ Parser.prototype = {
     // 属性解析完成时的操作
     onattribend(isExpression) {
         if (this._cbs.onattribute) {
-            this._cbs.onattribute(this._attribname, this._attribvalue);
+            this
+                ._cbs
+                .onattribute(this._attribname, this._attribvalue);
         }
 
-        if (this._attribs) {
-
-            var attrObj = {
-                name: this._attribname,
-                value: this._attribvalue
-            };
-
-            if (isExpression) {
-                attrObj.expression = this._attribvalue;
-            }
-
-            // var sameNameItems = getItemsFromAry(this._attribname, this._attribs);
-            var sameNameItems = this._attribs[this._attribname] || '';
-
-            if (sameNameItems.length) {
-                // 相同属性后面的会覆盖前面的
-                sameNameItems = sameNameItems[0];
-
-                Object.keys(attrObj).forEach(function(key) {
-                    sameNameItems[key] = attrObj[key];
-                });
-            } else {
-                // this._attribs.push(attrObj);
-                this._attribs[this._attribname] = this._attribvalue;
-            }
+        if (this._attribs && !Object.prototype.hasOwnProperty.call(this._attribs, this._attribname)) {
+            this._attribs[this._attribname] = this._attribvalue;
         }
 
         this._attribname = "";
@@ -335,7 +334,9 @@ Parser.prototype = {
 
     _getInstructionName(value) {
         var idx = value.search(re_nameEnd),
-            name = idx < 0 ? value : value.substr(0, idx);
+            name = idx < 0
+                ? value
+                : value.substr(0, idx);
 
         if (this._lowerCaseTagNames) {
             name = name.toLowerCase();
@@ -347,62 +348,79 @@ Parser.prototype = {
     ondeclaration(value) {
         if (this._cbs.onprocessinginstruction) {
             var name = this._getInstructionName(value);
-            this._cbs.onprocessinginstruction("!" + name, "!" + value);
+            this
+                ._cbs
+                .onprocessinginstruction("!" + name, "!" + value);
         }
     },
 
     onprocessinginstruction(value) {
         if (this._cbs.onprocessinginstruction) {
             var name = this._getInstructionName(value);
-            this._cbs.onprocessinginstruction("?" + name, "?" + value);
+            this
+                ._cbs
+                .onprocessinginstruction("?" + name, "?" + value);
         }
     },
 
     oncomment(value) {
         this._updatePosition(4);
 
-        if (this._cbs.oncomment) this._cbs.oncomment(value);
-        if (this._cbs.oncommentend) this._cbs.oncommentend();
-    },
+        if (this._cbs.oncomment)
+            this._cbs.oncomment(value);
+        if (this._cbs.oncommentend)
+            this._cbs.oncommentend();
+        }
+    ,
 
     oncdata(value) {
         this._updatePosition(1);
 
         if (this._options.xmlMode || this._options.recognizeCDATA) {
-            if (this._cbs.oncdatastart) this._cbs.oncdatastart();
-            if (this._cbs.ontext) this._cbs.ontext(value);
-            if (this._cbs.oncdataend) this._cbs.oncdataend();
-        } else {
+            if (this._cbs.oncdatastart)
+                this._cbs.oncdatastart();
+            if (this._cbs.ontext)
+                this._cbs.ontext(value);
+            if (this._cbs.oncdataend)
+                this._cbs.oncdataend();
+            }
+        else {
             this.oncomment("[CDATA[" + value + "]]");
         }
     },
 
     onerror(err) {
-        if (this._cbs.onerror) this._cbs.onerror(err);
-    },
+        if (this._cbs.onerror)
+            this._cbs.onerror(err);
+        }
+    ,
 
     onend() {
         if (this._cbs.onclosetag) {
-            for (
-                var i = this._stack.length; i > 0; this._cbs.onclosetag(this._stack[--i])
-            );
+            for (var i = this._stack.length; i > 0; this._cbs.onclosetag(this._stack[--i])) ;
+            }
+        if (this._cbs.onend)
+            this._cbs.onend();
         }
-        if (this._cbs.onend) this._cbs.onend();
-    },
-
+    ,
 
     //Resets the parser to a blank state, ready to parse a new HTML document
     reset() {
-        if (this._cbs.onreset) this._cbs.onreset();
-        this._tokenizer.reset();
+        if (this._cbs.onreset)
+            this._cbs.onreset();
+        this
+            ._tokenizer
+            .reset();
 
         this._tagname = "";
         this._attribname = "";
         this._attribs = null;
         this._stack = [];
 
-        if (this._cbs.onparserinit) this._cbs.onparserinit(this);
-    },
+        if (this._cbs.onparserinit)
+            this._cbs.onparserinit(this);
+        }
+    ,
 
     //Parses a complete HTML document and pushes it to the handler
     parseComplete(data) {
@@ -411,19 +429,27 @@ Parser.prototype = {
     },
 
     write(chunk) {
-        this._tokenizer.write(chunk);
+        this
+            ._tokenizer
+            .write(chunk);
     },
 
     end(chunk) {
-        this._tokenizer.end(chunk);
+        this
+            ._tokenizer
+            .end(chunk);
     },
 
     pause() {
-        this._tokenizer.pause();
+        this
+            ._tokenizer
+            .pause();
     },
 
     resume() {
-        this._tokenizer.resume();
+        this
+            ._tokenizer
+            .resume();
     },
 
     parseChunk: Parser.prototype.write,
@@ -437,7 +463,7 @@ module.exports = Parser;
 function getItemsFromAry(name, ary, prop) {
     prop = prop || 'name';
 
-    return ary.filter(function(item) {
+    return ary.filter(function (item) {
         return item[prop] === name;
     });
 }
