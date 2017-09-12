@@ -293,8 +293,6 @@ Tokenizer.prototype = {
             expr_start_left > 0 && expr_start_left--;
         }
 
-        console.log('expr_start_left:', expr_start_left);
-
         if (c === "=" || c === "/" || c === ">" || (whitespace(c) && expr_start_left === 0)) {
             this._cbs.onattribname(this._getSection());
             this._sectionStart = -1;
