@@ -252,6 +252,14 @@ Tokenizer.prototype = {
     },
 
     _stateBeforeAttributeName(c) {
+        if (c === EXPR_START) {
+            expr_start_left++;
+        }
+
+        if (c === EXPR_END) {
+            expr_start_left--;
+        }
+
         if (c === ">") {
             this._cbs.onopentagend();
             this._state = TEXT;
@@ -277,7 +285,15 @@ Tokenizer.prototype = {
 
     // 属性名字
     _stateInAttributeName(c) {
-        if (c === "=" || c === "/" || c === ">" || whitespace(c)) {
+        if (c === EXPR_START) {
+            expr_start_left++;
+        }
+
+        if (c === EXPR_END) {
+            expr_start_left--;
+        }
+
+        if (c === "=" || c === "/" || c === ">" || (whitespace(c) && expr_start_left === 0)) {
             this._cbs.onattribname(this._getSection());
             this._sectionStart = -1;
             this._state = AFTER_ATTRIBUTE_NAME;
@@ -477,7 +493,9 @@ Tokenizer.prototype = {
             this._state = AFTER_SCRIPT_1;
         } else if (this._special === SPECIAL_STYLE && (c === "t" || c === "T")) {
             this._state = AFTER_STYLE_1;
-        } else this._state = TEXT;
+        } else {
+            this._state = TEXT;
+        }
     },
 
     _stateBeforeScript1: consumeSpecialNameChar("R", BEFORE_SCRIPT_2),
@@ -504,7 +522,9 @@ Tokenizer.prototype = {
             this._state = IN_CLOSING_TAG_NAME;
             this._sectionStart = this._index - 6;
             this._index--; //reconsume the token
-        } else this._state = TEXT;
+        } else {
+            this._state = TEXT;
+        }
     },
 
     _stateBeforeStyle1: consumeSpecialNameChar("Y", BEFORE_STYLE_2),
@@ -529,7 +549,9 @@ Tokenizer.prototype = {
             this._state = IN_CLOSING_TAG_NAME;
             this._sectionStart = this._index - 5;
             this._index--; //reconsume the token
-        } else this._state = TEXT;
+        } else {
+            this._state = TEXT;
+        }
     },
 
     _stateBeforeEntity: ifElseState("#", BEFORE_NUMERIC_ENTITY, IN_NAMED_ENTITY),

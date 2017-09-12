@@ -1,1 +1,5 @@
-<Switch condition={"5"}></Switch>
+<Switch s=1 {...field.init('city', {
+    rules: [
+        {required: true, trigger: 'onBlur'}
+    ]
+})} condition={'5'} className='a'></Switch>
