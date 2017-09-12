@@ -9,26 +9,34 @@ var ast = parser.parseDOM(html, {
 
 // console.log('ast:', ast);
 
-console.log(ast[0]);
+// console.log(ast[0]);
 ast[0].children.forEach(item => {
-    console.log(item);
+    // console.log(item);
 });
 
-// printAttrs(ast[0]);
+printAttrs(ast);
 
 // console.log('attr:', ast[0].attribs);
 
-
 function printAttrs(ast) {
-    if(ast.attrs && ast.attrs.length) {
-        ast.attrs.forEach(attr => {
-            // console.log('attr:', attr);
+    if(Array.isArray(ast)) {
+        ast.forEach(item => {
+            printAttrs(item);
         });
-    }
+    } else {
+        if(ast.attribs) {
+            Object.keys(ast.attribs).forEach(key => {
+                let attr = ast.attribs[key];
 
-    if(ast.children && ast.children.length) {
-        ast.children.forEach(child => {
-            printAttrs(child);
-        });
+                console.log('map:', key);
+                console.log('attr:', attr);
+            });
+        }
+
+        if(ast.children && ast.children.length) {
+            ast.children.forEach(child => {
+                printAttrs(child);
+            });
+        }
     }
 }

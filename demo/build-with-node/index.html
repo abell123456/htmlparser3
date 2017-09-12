@@ -1,5 +1,91 @@
-<Switch s=1 {...field.init('city', {
-    rules: [
-        {required: true, trigger: 'onBlur'}
-    ]
-})} condition={'5'} className='a'></Switch>
+<style lang='css'>
+    .mcn-container {
+        padding: 18px;
+        color: #333;
+    }
+
+    .form-ctl {
+        margin-top: 20px;
+        max-width: 500px;
+    }
+</style>
+
+<template>
+    <Layout
+        config={leftSideConfig}
+        active={active}
+    >
+        <div className='mcn-container'>
+            <Notice title="Note">
+                Content Content Content Content
+            </Notice>
+
+            <Form direction="ver" className="form-ctl" labelAlign='top'>
+                <Form.Item required {...formItemLayout} label="Your account type:">
+                    <Radio.Group value={state.accountType} onChange={onChange.bind(this, 'accountType')}>
+                        <Radio value="personal">Personal account(accepts USD)</Radio>
+                        <Radio value="company">Company account(accepts USD)</Radio>
+                    </Radio.Group>
+                </Form.Item>
+
+                {/** Account Number */}
+                <Form.Item required {...formItemLayout} label="Account number/IBAN:">
+                    <Input value={state.accountNumber} onChange={onChange.bind(this, 'accountNumber')} />
+                </Form.Item>
+
+                {/** Account Name */}
+                <Form.Item required {...formItemLayout} label="Account Name:">
+                    <Input value={state.accountName} onChange={onChange.bind(this, 'accountName')} />
+                </Form.Item>
+
+                {/** Swift Code */}
+                <Form.Item required {...formItemLayout} label="Swift Code:">
+                    <Input value={state.swiftCode} onChange={onChange.bind(this, 'swiftCode')} />
+                </Form.Item>
+
+                {/** Bank Name */}
+                <Form.Item required {...formItemLayout} label="Bank Name:">
+                    <Input value={state.bankName} onChange={onChange.bind(this, 'bankName')} />
+                </Form.Item>
+
+                {/** Bank Branch Name */}
+                <Form.Item required {...formItemLayout} label="Bank Branch Name:">
+                    <Input value={state.bankBranchName} onChange={onChange.bind(this, 'bankBranchName')} />
+                </Form.Item>
+
+                {/** Bank Branch Name */}
+                <Form.Item required {...formItemLayout} label="Bank Adress:">
+                    <Grid.Row>
+                        <Grid.Col>
+                            <Form.Item>
+                                <Input {...field.init('city', {
+                                    rules: [
+                                        {required: true, trigger: 'onBlur'}
+                                    ]
+                                })}/>
+                            </Form.Item>
+                        </Grid.Col>
+                        <Grid.Col>
+                            <Form.Item>
+                                <Input {...field.init('state', {
+                                    rules: [
+                                        {required: true, trigger: 'onBlur'}
+                                    ]
+                                })}/>
+                            </Form.Item>
+                        </Grid.Col>
+                        <Grid.Col>
+                            <Form.Item>
+                                <Input {...field.init('country', {
+                                    rules: [
+                                        {required: true, trigger: 'onBlur'}
+                                    ]
+                                })}/>
+                            </Form.Item>
+                        </Grid.Col>
+                    </Grid.Row>
+                </Form.Item>
+            </Form>
+        </div>
+    </Layout>
+</template>

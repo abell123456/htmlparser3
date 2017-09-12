@@ -257,7 +257,7 @@ Tokenizer.prototype = {
         }
 
         if (c === EXPR_END) {
-            expr_start_left--;
+            expr_start_left > 0 && expr_start_left--;
         }
 
         if (c === ">") {
@@ -290,8 +290,10 @@ Tokenizer.prototype = {
         }
 
         if (c === EXPR_END) {
-            expr_start_left--;
+            expr_start_left > 0 && expr_start_left--;
         }
+
+        console.log('expr_start_left:', expr_start_left);
 
         if (c === "=" || c === "/" || c === ">" || (whitespace(c) && expr_start_left === 0)) {
             this._cbs.onattribname(this._getSection());
@@ -371,7 +373,7 @@ Tokenizer.prototype = {
         }
 
         if (c === EXPR_END) {
-            expr_start_left--;
+            expr_start_left > 0 && expr_start_left--;
         }
 
         // 是否跳出表达式继续解析的判断
