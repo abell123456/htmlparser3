@@ -3,7 +3,7 @@ var fs = require('fs');
 var html = fs.readFileSync('./index.html', 'utf8');
 
 var ast = parser.parseDOM(html, {
-    xmlMode: true
+    xmlMode: true,
 });
 
 
@@ -25,11 +25,11 @@ function printAttrs(ast) {
         });
     } else {
         if(ast.attribs) {
+            console.log(ast);
             Object.keys(ast.attribs).forEach(key => {
                 let attr = ast.attribs[key];
-
                 console.log('map:', key);
-                console.log('attr:', attr);
+                console.log('attr:', attr, typeof attr);
             });
         }
 

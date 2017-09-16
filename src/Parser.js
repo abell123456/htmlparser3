@@ -132,8 +132,9 @@ function Parser(cbs, options) {
 
     this._tagname = "";
     this._attribname = "";
-    this._attribvalue = "";
+    this._attribvalue = null;
     this._attribs = null;
+    this._keyOnlyAttribs = null;
     this._stack = [];
 
     this.startIndex = 0;
@@ -218,8 +219,8 @@ Parser.prototype = {
         }
 
         if (this._cbs.onopentag) {
-            // this._attribs = [];
             this._attribs = {};
+            this._keyOnlyAttribs = [];
         }
     },
 
@@ -230,10 +231,11 @@ Parser.prototype = {
             if (this._cbs.onopentag) {
                 this
                     ._cbs
-                    .onopentag(this._tagname, this._attribs);
+                    .onopentag(this._tagname, this._attribs, this._keyOnlyAttribs);
             }
 
             this._attribs = null;
+            this._keyOnlyAttribs = null;
         }
 
         if (!this._options.xmlMode && this._cbs.onclosetag && this._tagname in voidElements) {
@@ -312,6 +314,10 @@ Parser.prototype = {
 
     // 赋值：属性值，是一个持续的过程
     onattribdata(value) {
+        if(this._attribvalue === null) {
+            this._attribvalue = '';
+        }
+
         this._attribvalue += value;
     },
 
@@ -324,11 +330,15 @@ Parser.prototype = {
         }
 
         if (this._attribs && !Object.prototype.hasOwnProperty.call(this._attribs, this._attribname)) {
-            this._attribs[this._attribname] = this._attribvalue;
+            this._attribs[this._attribname] = this._attribvalue || '';
+
+            if(this._attribvalue === null) {
+                this._keyOnlyAttribs.push(this._attribname);
+            }
         }
 
         this._attribname = "";
-        this._attribvalue = "";
+        this._attribvalue = null;
     },
     // ******* attribute处理 end ******
 
@@ -415,6 +425,7 @@ Parser.prototype = {
         this._tagname = "";
         this._attribname = "";
         this._attribs = null;
+        this._keyOnlyAttribs = null;
         this._stack = [];
 
         if (this._cbs.onparserinit)
